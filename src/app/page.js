@@ -13,9 +13,9 @@ async function Home() {
     <div className={styles.wrapper}>
       <h1 className={styles.mainHeading}>Latest Content:</h1>
 
-      {files.map((file, index) => (
+      {files.map((file) => (
         <BlogSummaryCard
-          key={index}
+          key={file.slug}
           slug={file.slug}
           title={file.title}
           abstract={file.abstract}
