@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 
 import BlogHero from "@/components/BlogHero";
 
@@ -7,15 +7,32 @@ import styles from "./postSlug.module.css";
 import { readFile } from "fs/promises";
 import matter from "gray-matter";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import { BLOG_TITLE } from "@/constants";
 
-async function BlogPost({ params }) {
-  const { postSlug } = await params;
+const getFileData = cache(async (postSlug) => {
   const fileContent = await readFile(
     `${process.cwd()}/content/${postSlug}.mdx`,
     "utf-8"
   );
 
-  const { data: frontmatter, content } = await matter(fileContent);
+  const { data: frontmatter, content } = matter(fileContent);
+
+  return { frontmatter, content };
+});
+
+export async function generateMetadata({ params }) {
+  const { postSlug } = params;
+  const { frontmatter } = await getFileData(postSlug);
+  return {
+    title: `${BLOG_TITLE}: ${frontmatter.title}`,
+    description: frontmatter.description,
+  };
+}
+
+async function BlogPost({ params }) {
+  const { postSlug } = await params;
+
+  const { frontmatter, content } = await getFileData(postSlug);
 
   return (
     <article className={styles.wrapper}>
