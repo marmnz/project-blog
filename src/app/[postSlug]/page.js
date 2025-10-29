@@ -10,6 +10,10 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { BLOG_TITLE } from "@/constants";
 import CodeSnippet from "@/components/CodeSnippet/CodeSnippet";
 
+const DivisionGroupsDemo = React.lazy(() =>
+  import("@/components/DivisionGroupsDemo")
+);
+
 const getFileData = React.cache(async (postSlug) => {
   const fileContent = await readFile(
     `${process.cwd()}/content/${postSlug}.mdx`,
@@ -37,6 +41,7 @@ async function BlogPost({ params }) {
 
   const components = {
     pre: (props) => <CodeSnippet {...props}>{props.children}</CodeSnippet>,
+    DivisionGroupsDemo: DivisionGroupsDemo,
   };
 
   return (
