@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 
 import BlogHero from "@/components/BlogHero";
 
@@ -8,8 +8,9 @@ import { readFile } from "fs/promises";
 import matter from "gray-matter";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { BLOG_TITLE } from "@/constants";
+import CodeSnippet from "@/components/CodeSnippet/CodeSnippet";
 
-const getFileData = cache(async (postSlug) => {
+const getFileData = React.cache(async (postSlug) => {
   const fileContent = await readFile(
     `${process.cwd()}/content/${postSlug}.mdx`,
     "utf-8"
@@ -34,6 +35,10 @@ async function BlogPost({ params }) {
 
   const { frontmatter, content } = await getFileData(postSlug);
 
+  const components = {
+    pre: (props) => <CodeSnippet {...props}>{props.children}</CodeSnippet>,
+  };
+
   return (
     <article className={styles.wrapper}>
       <BlogHero
@@ -41,7 +46,7 @@ async function BlogPost({ params }) {
         publishedOn={frontmatter.publishedOn}
       />
       <div className={styles.page}>
-        <MDXRemote source={content} />
+        <MDXRemote source={content} components={components} />
       </div>
     </article>
   );
