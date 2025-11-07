@@ -8,11 +8,7 @@ import { readFile } from "fs/promises";
 import matter from "gray-matter";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { BLOG_TITLE } from "@/constants";
-import CodeSnippet from "@/components/CodeSnippet/CodeSnippet";
-
-const DivisionGroupsDemo = React.lazy(() =>
-  import("@/components/DivisionGroupsDemo")
-);
+import COMPONENT_MAP from "@/helpers/component-map";
 
 const getFileData = React.cache(async (postSlug) => {
   const fileContent = await readFile(
@@ -39,11 +35,6 @@ async function BlogPost({ params }) {
 
   const { frontmatter, content } = await getFileData(postSlug);
 
-  const components = {
-    pre: (props) => <CodeSnippet {...props}>{props.children}</CodeSnippet>,
-    DivisionGroupsDemo: DivisionGroupsDemo,
-  };
-
   return (
     <article className={styles.wrapper}>
       <BlogHero
@@ -51,7 +42,7 @@ async function BlogPost({ params }) {
         publishedOn={frontmatter.publishedOn}
       />
       <div className={styles.page}>
-        <MDXRemote source={content} components={components} />
+        <MDXRemote source={content} components={COMPONENT_MAP} />
       </div>
     </article>
   );
