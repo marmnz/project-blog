@@ -61,6 +61,7 @@ function DivisionGroupsDemo({
                       layout={true}
                       key={`${id}-item-${layoutId}`}
                       className={styles.item}
+                      layoutId={`${id}-item-${layoutId}`}
                     />
                   );
                 })}
@@ -74,7 +75,16 @@ function DivisionGroupsDemo({
             <p className={styles.remainderHeading}>Remainder Area</p>
 
             {range(remainder).map((index) => {
-              return <div key={index} className={styles.item} />;
+              const idx = numOfGroups * numOfItemsPerGroup + index;
+              const layoutId = idx;
+              return (
+                <motion.div
+                  layout={true}
+                  key={`${id}-item-${layoutId}`}
+                  className={styles.item}
+                  layoutId={`${id}-item-${layoutId}`}
+                />
+              );
             })}
           </div>
         )}
